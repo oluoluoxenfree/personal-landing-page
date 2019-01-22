@@ -24,8 +24,6 @@ body {
   text-align: center;
   background-color: $page-color;
   color: mix($text-color, $page-color, 70%);
-  background: radial-gradient(ellipse at center, $page-color 10%, mix($page-color, $text-color, 85%)  100%);
-  background-attachment: fixed;
   font-family: sans-serif;
   font-weight: 30;
   font-size: 16px;
