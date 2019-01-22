@@ -19,7 +19,7 @@ gulp.task('init', function () {
   if(process.env.URL) {
     var siteEnv = {"rootURL" : process.env.URL};
   } else {
-    var siteEnv = {"rootURL" : "https://twavatar.netlify.com"};
+    var siteEnv = {"rootURL" : "https://olu.ooo"};
   }
 
   // save the status of our environment somewhere that our SSG can access it
