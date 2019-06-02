@@ -5,5 +5,4 @@ layout: layouts/base.njk
 
 # Hello there!
 
-Olu woz here 2k19.
-
+This is my personal blog, for personal things. Thank you for checking it out!
