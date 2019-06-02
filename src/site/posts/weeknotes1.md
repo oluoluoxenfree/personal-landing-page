@@ -1,6 +1,9 @@
 ---
 title: First weeknotes of June (and ever)
 date: 2019-06-02
+layout: layouts/post.md
+tags: post
+templateEngineOverride: njk,md
 ---
 
 - Hello! Welcome to my personal fledgling blog!
