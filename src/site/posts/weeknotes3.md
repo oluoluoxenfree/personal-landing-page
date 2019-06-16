@@ -1,6 +1,6 @@
 ---
 title: Third weeknotes of June
-date: 2019-06-09
+date: 2019-06-16
 layout: layouts/post.md
 tags: post
 templateEngineOverride: njk,md
