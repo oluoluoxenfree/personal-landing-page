@@ -1,6 +1,6 @@
 ---
 title: Weeknotes 9 aka the one after a hiatus
-date: 2019-07-21
+date: 2019-12-08
 layout: layouts/post.md
 tags: post
 templateEngineOverride: njk,md
