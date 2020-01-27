@@ -7,7 +7,7 @@
   "main": "gulpfile.js",
   "engines": {
     "npm": "*",
-    "node": ">=11.5"
+    "node": "*"
   },
   "scripts": {
     "start": "yarn run build && yarn run watch",
