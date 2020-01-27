@@ -5,6 +5,10 @@
   "author": "Phil Hawksworth",
   "license": "MIT",
   "main": "gulpfile.js",
+  "engines": {
+    "npm": "*",
+    "node": ">=11.5"
+  },
   "scripts": {
     "start": "yarn run build && yarn run watch",
     "css": "gulp scss",
