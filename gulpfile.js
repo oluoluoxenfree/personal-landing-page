@@ -3,17 +3,14 @@ var sass = require("gulp-sass");
 var serve = require("gulp-serve");
 var shell = require("gulp-shell");
 var clean = require("gulp-clean");
-var runSequence = require("run-sequence");
-var request = require("request");
 var fs = require("fs");
-var config = require("dotenv").config();
 
 // what goes where?
 var buildSrc = "src";
 var buildDest = "dist";
 
 // cleanup the build output
-function init(done) {
+function init() {
   // Look for the environment variables
   if (process.env.URL) {
     var siteEnv = { rootURL: process.env.URL };
@@ -22,7 +19,7 @@ function init(done) {
   }
 
   // save the status of our environment somewhere that our SSG can access it
-  fs.writeFile(
+  return fs.writeFile(
     buildSrc + "/site/_data/site.json",
     JSON.stringify(siteEnv),
     function(err) {
@@ -31,13 +28,11 @@ function init(done) {
       }
     }
   );
-  done();
 }
 
 // cleanup the build output
-function cleanBuild(done) {
-  gulp.src(buildDest, { read: false }).pipe(clean());
-  done();
+function cleanBuild() {
+  return del([buildDest]);
 }
 
 // local webserver for development
@@ -50,8 +45,8 @@ gulp.task(
 );
 
 // Compile SCSS files to CSS
-function scss(done) {
-  gulp
+function scss() {
+  return gulp
     .src(buildSrc + "/scss/main.scss")
     .pipe(
       sass({
@@ -59,7 +54,6 @@ function scss(done) {
       }).on("error", sass.logError)
     )
     .pipe(gulp.dest(buildDest + "/css"));
-  done();
 }
 
 /*
@@ -73,13 +67,14 @@ function generate(done) {
 /*
   Watch src folder for changes
 */
-gulp.task("watch", function() {
+gulp.task("watch", function(done) {
   gulp.watch(buildSrc + "/**/*", ["build"]);
+  done();
 });
 
 /*
-  Let's build thus sucker.
+  Let's build this sucker.
 */
 gulp.task("build", function(done) {
-  gulp.parallel(cleanBuild, init), gulp.parallel(generate, scss), done();
+  return gulp.series(cleanBuild, init, generate, scss), done();
 });
