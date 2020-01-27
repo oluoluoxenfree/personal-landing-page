@@ -13,7 +13,7 @@
     "watch": "gulp watch & gulp serve"
   },
   "dependencies": {
-    "@11ty/eleventy": "^0.2.15",
+    "@11ty/eleventy": "^0.10.0",
     "cheerio": "^1.0.0-rc.2",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
