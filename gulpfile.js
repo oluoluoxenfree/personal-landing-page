@@ -1,16 +1,16 @@
 var gulp = require("gulp");
 var sass = require("gulp-sass");
 var serve = require("gulp-serve");
-var shell = require("gulp-shell");
 var fs = require("fs");
 var del = require("del");
+var cp = require("child_process");
 
 // what goes where?
 var buildSrc = "src";
 var buildDest = "dist";
 
 // cleanup the build output
-function init() {
+gulp.task("init", function(done) {
   // Look for the environment variables
   if (process.env.URL) {
     var siteEnv = { rootURL: process.env.URL };
@@ -19,21 +19,27 @@ function init() {
   }
 
   // save the status of our environment somewhere that our SSG can access it
-  return fs.writeFile(
-    buildSrc + "/site/_data/site.json",
-    JSON.stringify(siteEnv),
-    function(err) {
-      if (err) {
+
+  const write = () => {
+    fs.writeFileSync(
+      `${buildSrc}/site/_data/site.json`,
+      JSON.stringify(siteEnv),
+      function(err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
         console.log(err);
       }
-    }
-  );
-}
+    );
+    done();
+  };
+
+  return write();
+});
 
 // cleanup the build output
-function cleanBuild() {
-  return del([buildDest]);
-}
+gulp.task("cleanBuild", async function() {
+  return await del([`${buildDest}/*`]);
+});
 
 // local webserver for development
 gulp.task(
@@ -45,7 +51,7 @@ gulp.task(
 );
 
 // Compile SCSS files to CSS
-function scss() {
+gulp.task("scss", function() {
   return gulp
     .src(buildSrc + "/scss/main.scss")
     .pipe(
@@ -54,15 +60,22 @@ function scss() {
       }).on("error", sass.logError)
     )
     .pipe(gulp.dest(buildDest + "/css"));
-}
+});
 
 /*
- Run our static site generator to build the pages
+  Run our static site generator to build the pages
 */
-function generate(done) {
-  shell.task("eleventy --config=eleventy.js");
-  done();
-}
+gulp.task("generate", function(done) {
+  return cp.exec("eleventy --config=eleventy.js", function(
+    err,
+    stdout,
+    stderr
+  ) {
+    console.log(stdout);
+    console.log(stderr);
+    done(err);
+  });
+});
 
 /*
   Watch src folder for changes
@@ -75,6 +88,7 @@ gulp.task("watch", function(done) {
 /*
   Let's build this sucker.
 */
-gulp.task("build", function(done) {
-  return gulp.series(cleanBuild, init, generate, scss), done();
+exports.build = gulp.task("build", function(done) {
+  gulp.series("cleanBuild", "init", "generate", "scss");
+  done();
 });
