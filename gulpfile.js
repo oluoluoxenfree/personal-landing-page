@@ -10,7 +10,7 @@ var buildSrc = "src";
 var buildDest = "dist";
 
 // cleanup the build output
-gulp.task("init", function(done) {
+const init = function(done) {
   // Look for the environment variables
   if (process.env.URL) {
     var siteEnv = { rootURL: process.env.URL };
@@ -34,12 +34,12 @@ gulp.task("init", function(done) {
   };
 
   return write();
-});
+};
 
 // cleanup the build output
-gulp.task("cleanBuild", async function() {
+const cleanBuild = async function() {
   return await del([`${buildDest}/*`]);
-});
+};
 
 // local webserver for development
 gulp.task(
@@ -51,7 +51,7 @@ gulp.task(
 );
 
 // Compile SCSS files to CSS
-gulp.task("scss", function() {
+const scss = function() {
   return gulp
     .src(buildSrc + "/scss/main.scss")
     .pipe(
@@ -60,12 +60,12 @@ gulp.task("scss", function() {
       }).on("error", sass.logError)
     )
     .pipe(gulp.dest(buildDest + "/css"));
-});
+};
 
 /*
   Run our static site generator to build the pages
 */
-gulp.task("generate", function(done) {
+const generate = function(done) {
   return cp.exec("eleventy --config=eleventy.js", function(
     err,
     stdout,
@@ -75,20 +75,17 @@ gulp.task("generate", function(done) {
     console.log(stderr);
     done(err);
   });
-});
+};
 
 /*
   Watch src folder for changes
 */
-gulp.task("watch", function(done) {
+const watch = function(done) {
   gulp.watch(buildSrc + "/**/*", ["build"]);
   done();
-});
+};
 
 /*
   Let's build this sucker.
 */
-exports.build = gulp.task("build", function(done) {
-  gulp.series("cleanBuild", "init", "generate", "scss");
-  done();
-});
+exports.build = gulp.series(cleanBuild, init, generate, scss);
